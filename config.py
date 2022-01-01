@@ -1,0 +1,3 @@
+
+
+SPLITSIZE = 512 
