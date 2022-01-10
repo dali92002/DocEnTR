@@ -26,11 +26,13 @@ transform = transforms.Compose([transforms.RandomResizedCrop(256),transforms.ToT
 
 
 SPLITSIZE = cfg.SPLITSIZE
-SETTING = 'base'
+SETTING = cfg.vit_model_size
+TPS = cfg.vit_patch_size
+
 batch_size = 32
 
 
-patch_size = 32
+patch_size = TPS
 image_size =  (SPLITSIZE,SPLITSIZE)
 
 MASKINGRATIO = 0.5
@@ -153,7 +155,7 @@ def valid_model(epoch):
         best_psnr = psnr
         best_epoch = epoch
         
-        torch.save(model.state_dict(), './weights/best-model_'+VALID_DIBCO+'.pt')
+        torch.save(model.state_dict(), './weights/best-model_'+str(TPS)+'_'+VALID_DIBCO+'.pt')
     
 
 

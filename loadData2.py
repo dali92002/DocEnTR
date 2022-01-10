@@ -1,7 +1,6 @@
 import torch.utils.data as D
 import cv2
 import numpy as np
-import datasetConfig
 import torchvision.transforms.functional as TF
 from torchvision import transforms
 import random
@@ -12,7 +11,7 @@ import config as cfg
 
 patch_size  = cfg.SPLITSIZE
 
-baseDir = datasetConfig.baseDir_binarize
+baseDir = cfg.data_path
 
 
 
