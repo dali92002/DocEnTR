@@ -11,7 +11,7 @@ SPLITSIZE = cfg.SPLITSIZE
 
 
 
-def imvisualize(imdeg,imgt,impred,ind,epoch='0'):
+def imvisualize(imdeg,imgt,impred,ind,epoch='0',setting=''):
     
     mean = [0.485, 0.456, 0.406]
     std = [0.229, 0.224, 0.225]
@@ -32,13 +32,13 @@ def imvisualize(imdeg,imgt,impred,ind,epoch='0'):
     impred[np.where(impred>1)] = 1
     impred[np.where(impred<0)] = 0
 
-    if not os.path.exists('vis/epoch'+epoch):
-        os.makedirs('vis/epoch'+epoch)
+    if not os.path.exists('vis'+setting+'/epoch'+epoch):
+        os.makedirs('vis'+setting+'/epoch'+epoch)
     
     
-    plt.imsave('vis/epoch'+epoch+'/'+ind.split('.')[0]+'_deg.png',imdeg)
-    plt.imsave('vis/epoch'+epoch+'/'+ind.split('.')[0]+'_gt.png',imgt)
-    plt.imsave('vis/epoch'+epoch+'/'+ind.split('.')[0]+'_pred.png',impred)
+    plt.imsave('vis'+setting+'/epoch'+epoch+'/'+ind.split('.')[0]+'_deg.png',imdeg)
+    plt.imsave('vis'+setting+'/epoch'+epoch+'/'+ind.split('.')[0]+'_gt.png',imgt)
+    plt.imsave('vis'+setting+'/epoch'+epoch+'/'+ind.split('.')[0]+'_pred.png',impred)
     
 
 def psnr(img1, img2):
@@ -49,13 +49,13 @@ def psnr(img1, img2):
     return (20 * math.log10(PIXEL_MAX / math.sqrt(mse)))
 
 
-def reconstruct(idx,h,w,epoch):
+def reconstruct(idx,h,w,epoch,setting):
 
     rec_image = np.zeros(((h//SPLITSIZE + 1)*SPLITSIZE,(w//SPLITSIZE + 1)*SPLITSIZE,3))
 
     for i in range (0,h,SPLITSIZE):
         for j in range(0,w,SPLITSIZE):
-            p = cv2.imread('vis/epoch'+str(epoch)+'/'+idx+'_'+str(i)+'_'+str(j)+'_pred.png')
+            p = cv2.imread('vis'+setting+'/epoch'+str(epoch)+'/'+idx+'_'+str(i)+'_'+str(j)+'_pred.png')
             
             rec_image[i:i+SPLITSIZE,j:j+SPLITSIZE,:] = p
 
@@ -64,7 +64,7 @@ def reconstruct(idx,h,w,epoch):
 
 
 
-def count_psnr(epoch, valid_data='2018'):
+def count_psnr(epoch, valid_data='2018',setting=''):
     avg_psnr = 0
     qo = 0
     folder = 'vis/epoch'+str(epoch)
@@ -75,8 +75,8 @@ def count_psnr(epoch, valid_data='2018'):
     # pred_imgs = os.listdir(folder)
     # pred_imgs = [im for im  in pred_imgs if 'pred' in im]
 
-    if not os.path.exists('vis/epoch'+str(epoch)+'/00_reconstr'):
-        os.makedirs('vis/epoch'+str(epoch)+'/00_reconstr')
+    if not os.path.exists('vis'+setting+'/epoch'+str(epoch)+'/00_reconstr'):
+        os.makedirs('vis'+setting+'/epoch'+str(epoch)+'/00_reconstr')
 
     for im in gt_imgs:
 
@@ -87,15 +87,15 @@ def count_psnr(epoch, valid_data='2018'):
         
         
 
-        pred_image = reconstruct(im.split('.')[0],gt_image.shape[0],gt_image.shape[1],epoch)/ max_p
+        pred_image = reconstruct(im.split('.')[0],gt_image.shape[0],gt_image.shape[1],epoch,setting)/ max_p
 
 
         pred_image = (pred_image>0.5)*1
         avg_psnr+=psnr(pred_image,gt_image)
         qo+=1
 
-        cv2.imwrite('vis/epoch'+str(epoch)+'/00_reconstr/'+im,gt_image*255)
-        cv2.imwrite('vis/epoch'+str(epoch)+'/00_reconstr/'+im.split('.')[0]+'_pred.png',pred_image*255)
+        cv2.imwrite('vis'+setting+'/epoch'+str(epoch)+'/00_reconstr/'+im,gt_image*255)
+        cv2.imwrite('vis'+setting+'/epoch'+str(epoch)+'/00_reconstr/'+im.split('.')[0]+'_pred.png',pred_image*255)
         
 
     return(avg_psnr/qo)        

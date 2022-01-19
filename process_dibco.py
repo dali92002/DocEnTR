@@ -166,7 +166,7 @@ def prepare_dibco_experiment(test_set, patches_size, overlap_size, patches_size_
 
 
 os.system('rm '+main_path+'train/*')
-os.system('rm '+main_path+'/train_gt/*')
+os.system('rm '+main_path+'train_gt/*')
                 
 os.system('rm '+main_path+'valid/*')
 os.system('rm '+main_path+'valid_gt/*')

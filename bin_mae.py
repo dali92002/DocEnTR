@@ -9,7 +9,8 @@ from einops import rearrange
 import loadData2 as loadData
 import utils as utils
 import config as cfg
- 
+import os
+
 
 
 
@@ -29,26 +30,35 @@ SPLITSIZE = cfg.SPLITSIZE
 SETTING = cfg.vit_model_size
 TPS = cfg.vit_patch_size
 
-batch_size = 32
+batch_size = cfg.batch_size
 
+experiment = SETTING +'_'+ str(SPLITSIZE)+'_' + str(TPS)
 
 patch_size = TPS
 image_size =  (SPLITSIZE,SPLITSIZE)
 
 MASKINGRATIO = 0.5
 VIS_RESULTS = True
-VALID_DIBCO = '2018'
+VALID_DIBCO = cfg.testing_dataset
+
 
 if SETTING == 'base':
     ENCODERLAYERS = 6
     ENCODERHEADS = 8
-    ENCODERDIM = 1024
+    ENCODERDIM = 768
+
+
 
 
 if SETTING == 'small':
     ENCODERLAYERS = 3
     ENCODERHEADS = 4
     ENCODERDIM = 512
+
+if SETTING == 'large':
+    ENCODERLAYERS = 12
+    ENCODERHEADS = 16
+    ENCODERDIM = 1024
 
 
 
@@ -104,8 +114,9 @@ v = ViT(
 model = BINMODEL(
     encoder = v,
     masking_ratio = MASKINGRATIO,   # the paper recommended 75% masked patches ## __ doesnt matter for binarization
-    decoder_dim = 512,      # paper showed good results with just 512
-    decoder_depth = 6       # anywhere from 1 to 8
+    decoder_dim = ENCODERDIM,      # paper showed good results with just 512, previously 512 for DIBCO 17
+    decoder_depth = ENCODERLAYERS,
+    decoder_heads = ENCODERHEADS       # anywhere from 1 to 8
 )
 
 
@@ -133,7 +144,7 @@ def visualize(epoch):
             rec_images = rearrange(rec_patches, 'b (h w) (p1 p2 c) -> b c (h p1) (w p2)', p1 = patch_size, p2 = patch_size,  h=image_size[0]//patch_size)
             
             for j in range (0,bs):
-                imvisualize(inputs[j].cpu(),outputs[j].cpu(),rec_images[j].cpu(),valid_index[j],epoch)
+                imvisualize(inputs[j].cpu(),outputs[j].cpu(),rec_images[j].cpu(),valid_index[j],epoch,experiment)
             
             losses += loss.item()
     
@@ -147,7 +158,7 @@ def valid_model(epoch):
 
     print('last best psnr: ', best_psnr, 'epoch: ', best_epoch)
     
-    psnr  = count_psnr(epoch,valid_data=VALID_DIBCO)
+    psnr  = count_psnr(epoch,valid_data=VALID_DIBCO,setting=experiment)
     print('curr psnr: ', psnr)
 
 
@@ -155,14 +166,24 @@ def valid_model(epoch):
         best_psnr = psnr
         best_epoch = epoch
         
-        torch.save(model.state_dict(), './weights/best-model_'+str(TPS)+'_'+VALID_DIBCO+'.pt')
+        torch.save(model.state_dict(), './weights/best-model_'+str(TPS)+'_'+VALID_DIBCO+experiment+'.pt')
+
+        dellist = os.listdir('vis'+experiment)
+        dellist.remove('epoch'+str(epoch))
+
+        for dl in dellist:
+            os.system('rm -r vis'+experiment+'/'+dl)
+
+
+    else:
+        os.system('rm -r vis'+experiment+'/epoch'+str(epoch))
     
 
 
 
 
 
-for epoch in range(1,100): 
+for epoch in range(1,cfg.epochs): 
 
     running_loss = 0.0
     # for i, data in enumerate(trainloader, 0):
@@ -190,6 +211,7 @@ for epoch in range(1,100):
         if i % show_every == show_every-1:    # print every 20 mini-batches
             print('[Epoch: %d, Iter: %5d] Train loss: %.3f' % (epoch, i + 1, running_loss / show_every))
             running_loss = 0.0
+       
     
     if VIS_RESULTS:
         visualize(str(epoch))
@@ -198,4 +220,4 @@ for epoch in range(1,100):
     # print('Best valid loss: ',best_valid_loss)
 
 
-p=415
+
