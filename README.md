@@ -80,5 +80,5 @@ To be added ...
 ## Authors
 - [Mohamed Ali Souibgui](https://github.com/dali92002)
 - [Sanked Biswas](https://github.com/biswassanket)
-## Authors
+## Conclusion
 There should be no bugs in this code, but if there is, we are sorry for that :') !! 
