@@ -6,10 +6,11 @@ from torchvision import transforms
 import random
 import os
 from PIL import Image
-import config as cfg
+from config import Configs
 
+cfg = Configs().parse() 
 
-patch_size  = cfg.SPLITSIZE
+split_size  = cfg.split_size
 
 baseDir = cfg.data_path
 
@@ -17,10 +18,11 @@ baseDir = cfg.data_path
 
 
 class Read_data(D.Dataset):
-    def __init__(self, file_label,set, augmentation=True):
+    def __init__(self, file_label,set, augmentation=True , flipped = False):
         self.file_label = file_label
         self.set = set
         self.augmentation = augmentation
+        self.flipped  = flipped
         
     def __getitem__(self, index):
         img_name = self.file_label[index]
@@ -38,6 +40,12 @@ class Read_data(D.Dataset):
         
         deg_img = cv2.imread(url_deg)
         gt_img = cv2.imread(url_gt)
+
+        if self.flipped:
+            deg_img = cv2.rotate(deg_img, cv2.ROTATE_180)
+            gt_img = cv2.rotate(gt_img, cv2.ROTATE_180)
+
+
         try:
             deg_img.any()
         except:
@@ -61,7 +69,7 @@ class Read_data(D.Dataset):
 
 
             # Random crop
-            i, j, h, w = transforms.RandomCrop.get_params(deg_img, output_size=(patch_size, patch_size))
+            i, j, h, w = transforms.RandomCrop.get_params(deg_img, output_size=(split_size, split_size))
 
             deg_img = TF.crop(deg_img, i, j, h, w)
             gt_img = TF.crop(gt_img, i, j, h, w)
@@ -92,7 +100,7 @@ class Read_data(D.Dataset):
         
         return file_name, out_deg_img, out_gt_img
 
-def loadData_sets():
+def loadData_sets(flipped=False):
     
     data_tr = os.listdir('data/train')
     np.random.shuffle(data_tr)
@@ -102,20 +110,7 @@ def loadData_sets():
     np.random.shuffle(data_te)
     
     data_train = Read_data(data_tr,'train', augmentation=True)
-    data_valid = Read_data(data_va,'valid',augmentation=False)
+    data_valid = Read_data(data_va,'valid',augmentation=False,flipped = flipped)
     data_test = Read_data(data_te,'test',augmentation=False)
 
     return data_train, data_valid, data_test
-
-# if __name__ == '__main__':
-#     import time
-#     start = time.time()
-    
-#     data_train, data_valid, data_test = loadData()
-
-
-
-
-
-
-    # exit(0)

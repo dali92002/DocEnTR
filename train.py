@@ -8,9 +8,11 @@ import torch.optim as optim
 from einops import rearrange
 import loadData2 as loadData
 import utils as utils
-import config as cfg
+from  config import Configs
 import os
 
+
+cfg = Configs().parse()
 
 
 
@@ -26,7 +28,9 @@ load_data_func = loadData.loadData_sets
 transform = transforms.Compose([transforms.RandomResizedCrop(256),transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 
-SPLITSIZE = cfg.SPLITSIZE
+
+
+SPLITSIZE = cfg.split_size
 SETTING = cfg.vit_model_size
 TPS = cfg.vit_patch_size
 
@@ -39,16 +43,13 @@ image_size =  (SPLITSIZE,SPLITSIZE)
 
 MASKINGRATIO = 0.5
 VIS_RESULTS = True
-VALID_DIBCO = cfg.testing_dataset
+VALID_DIBCO = cfg.validation_dataset
 
 
 if SETTING == 'base':
     ENCODERLAYERS = 6
     ENCODERHEADS = 8
     ENCODERDIM = 768
-
-
-
 
 if SETTING == 'small':
     ENCODERLAYERS = 3
@@ -113,8 +114,8 @@ v = ViT(
 
 model = BINMODEL(
     encoder = v,
-    masking_ratio = MASKINGRATIO,   # the paper recommended 75% masked patches ## __ doesnt matter for binarization
-    decoder_dim = ENCODERDIM,      # paper showed good results with just 512, previously 512 for DIBCO 17
+    masking_ratio = MASKINGRATIO,   ## __ doesnt matter for binarization
+    decoder_dim = ENCODERDIM,      
     decoder_depth = ENCODERLAYERS,
     decoder_heads = ENCODERHEADS       # anywhere from 1 to 8
 )
@@ -166,6 +167,9 @@ def valid_model(epoch):
         best_psnr = psnr
         best_epoch = epoch
         
+        if not os.path.exists('./weights/'):
+            os.makedirs('./weights/')
+    
         torch.save(model.state_dict(), './weights/best-model_'+str(TPS)+'_'+VALID_DIBCO+experiment+'.pt')
 
         dellist = os.listdir('vis'+experiment)
@@ -173,23 +177,15 @@ def valid_model(epoch):
 
         for dl in dellist:
             os.system('rm -r vis'+experiment+'/'+dl)
-
-
     else:
         os.system('rm -r vis'+experiment+'/epoch'+str(epoch))
     
 
 
-
-
-
 for epoch in range(1,cfg.epochs): 
 
     running_loss = 0.0
-    # for i, data in enumerate(trainloader, 0):
     
-    
-
     for i, (train_index, train_in, train_out) in enumerate(trainloader):
         
         inputs = train_in.to(device)
@@ -201,9 +197,7 @@ for epoch in range(1,cfg.epochs):
 
         loss.backward()
         optimizer.step()
-
         
-
         running_loss += loss.item()
         
         show_every = int(len(trainloader) / 7)
@@ -216,8 +210,5 @@ for epoch in range(1,cfg.epochs):
     if VIS_RESULTS:
         visualize(str(epoch))
         valid_model(epoch)
-    # print('Valid loss: ',valid_loss)
-    # print('Best valid loss: ',best_valid_loss)
-
 
 
