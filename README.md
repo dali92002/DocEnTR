@@ -1,7 +1,7 @@
 # DocEnTR
  
 ## Description
-Pytorch implementation of the paper DocEnTr: An End-to-End Document Image Enhancement Transformer .... 
+Pytorch implementation of the paper DocEnTr: An End-to-End Document Image Enhancement Transformer ..... This model is implemented on top of the [vit-pytorch](https://github.com/lucidrains/vit-pytorch) vision transformers library. The proposed model can be used to enhance (binarize) degraded document images, as shown in the following samples.
  
 <table style="padding:10px">
     <tr>
