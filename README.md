@@ -64,8 +64,88 @@ To be added ...
 ### Using our Pretrained Models To Binarize Degraded Images
 To be added ...
 
-## Trained Models
-To be added ...
+## Model Zoo
+In this section we release the pre-trained weights for all the best DocEnTr model variants trained on DIBCO benchmarks. 
+<!-- <style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;}
+.tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+  font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-baqh{text-align:center;vertical-align:top}
+.tg .tg-c3ow{border-color:inherit;text-align:center;vertical-align:top}
+.tg .tg-amwm{font-weight:bold;text-align:center;vertical-align:top}
+</style> -->
+<table class="tg">
+<thead>
+  <tr>
+    <th class="tg-c3ow"></th>
+    <th class="tg-c3ow">Testing data</th>
+    <th class="tg-c3ow">Models</th>
+    <th class="tg-c3ow">Patch size</th>
+    <th class="tg-c3ow">URL</th>
+    <th class="tg-baqh">PSNR</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td class="tg-c3ow" rowspan="2">0</td>
+    <td class="tg-c3ow" rowspan="2"><br>DIBCO 2011</td>
+    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">8x8</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/113X6gzFHTIkHZ3XYbyTcCWpQGV8QQzAs/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-amwm">20.81</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">DocEnTr--L</td>
+    <td class="tg-c3ow">16x16</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/12UpSAVFJ90xly5hCqnaAu1_5gmxwFlD_/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-baqh">20.62</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" rowspan="2">1</td>
+    <td class="tg-c3ow" rowspan="2"><br>DIBCO 2012</td>
+    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">8x8</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1FKXAS8BetcB2pCwkOTNHIX4Rj5-tq-Ep/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-amwm">22.29</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">DocEnTr-L</td>
+    <td class="tg-c3ow">16x16</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1SwZLVJVJmm_o_kDcYDvLgx74gatUVGUh/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-baqh">22.04</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" rowspan="2">2</td>
+    <td class="tg-c3ow" rowspan="2"><br>DIBCO 2017</td>
+    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">8x8</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1ABR48OpTXV3hcGNGfkSNfvAHCQlztV1o/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-amwm">19.11</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow">DocEnTr-L</td>
+    <td class="tg-c3ow">16x16</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1AlyPZJ7xviDggOKgeXE2kcVQQuz5BK6-/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-baqh">18.85</td>
+  </tr>
+  <tr>
+    <td class="tg-c3ow" rowspan="2">3</td>
+    <td class="tg-c3ow" rowspan="2"><br>DIBCO 2018</td>
+    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">8x8</td>
+    <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1qnIDVA7C5BGInEIBT65OogT0N9ca_E97/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-baqh">19.46</td>
+  </tr>
+  <tr>
+    <td class="tg-baqh">DocEnTr-L</td>
+    <td class="tg-baqh">16x16</td>
+    <td class="tg-baqh"><a href="https://drive.google.com/file/d/1yCnFLTE6Yg3qHNCuERiTP5ErOka8jzZl/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
+    <td class="tg-amwm">19.47</td>
+  </tr>
+</tbody>
+</table>
 
 ## Citation
 
