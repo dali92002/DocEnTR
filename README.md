@@ -71,8 +71,14 @@ To be added ...
 
 If you find this useful for your research, please cite it as follows:
 
-To be added ...
-
+```bash
+@article{souibgui2022docentr,
+  title={DocEnTr: An end-to-end document image enhancement transformer},
+  author={ Souibgui, Mohamed Ali and Biswas, Sanket and  Jemni, Sana Khamekhem and Kessentini, Yousri and Forn{\'e}s, Alicia and Llad{\'o}s, Josep and Pal, Umapada},
+  journal={arXiv preprint arXiv:2201.10252},
+  year={2022}
+}
+```
 ## Authors
 - [Mohamed Ali Souibgui](https://github.com/dali92002)
 - [Sanket Biswas](https://github.com/biswassanket)
