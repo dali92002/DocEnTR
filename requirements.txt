@@ -1,0 +1,10 @@
+einops==0.3.2
+matplotlib==3.5.0
+numpy==1.21.5
+opencv_python==4.5.4.60
+Pillow==9.0.0
+thinc==8.0.13
+torch==1.10.0
+torchvision==0.11.1
+tqdm==4.62.3
+vit_pytorch==0.24.3
