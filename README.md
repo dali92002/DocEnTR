@@ -57,12 +57,15 @@ For training, specify the desired settings (batch_size, patch_size, model_size, 
 ```bash
 python train.py --data_path /YOUR_DATA_PATH/ --batch_size 32 --vit_model_size base --vit_patch_size 16 --epochs 151 --split_size 256 --validation_dataset 2016
 ```
-You will get visualization results from the validation dataset on each epoch in a folder named vis+"YOUR_EXPERIMENT_SETTINGS" (it will be created). In the previous case it will be named visbase_256_16.
+You will get visualization results from the validation dataset on each epoch in a folder named vis+"YOUR_EXPERIMENT_SETTINGS" (it will be created). In the previous case it will be named visbase_256_16. Also, the best weights will be saved in the folder named "weights".
  
 ### Testing on a DIBCO dataset
-To be added ...
-### Using our Pretrained Models To Binarize Degraded Images
-To be added ...
+To test the trained model on a specific DIBCO dataset (should be matched with the one specified in Section Process Data, if not, run process_dibco.py again). Download the model weights (In section Model Zoo), or use your own trained model weights. Then, run the following command. Here, I test on H-DIBCO 2018, using the Base model with 8X8 patch_size, and a batch_size of 16.
+```bash
+python test.py --data_path /YOUR_DATA_PATH/ --model_weights_path  /THE_MODEL_WEIGHTS_PATH/  --batch_size 16 --vit_model_size base --vit_patch_size 8 --split_size 256 --testing_dataset 2018
+```
+### Demo
+To be added ... (Using our Pretrained Models To Binarize A Single Degraded Image)
 
 ## Model Zoo
 In this section we release the pre-trained weights for all the best DocEnTr model variants trained on DIBCO benchmarks. 
@@ -104,7 +107,7 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
   </tr>
   <tr>
     <td class="tg-c3ow" rowspan="2">1</td>
-    <td class="tg-c3ow" rowspan="2"><br>DIBCO 2012</td>
+    <td class="tg-c3ow" rowspan="2"><br>H-DIBCO 2012</td>
     <td class="tg-c3ow">DocEnTr-Base</td>
     <td class="tg-c3ow">8x8</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1FKXAS8BetcB2pCwkOTNHIX4Rj5-tq-Ep/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
@@ -132,7 +135,7 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
   </tr>
   <tr>
     <td class="tg-c3ow" rowspan="2">3</td>
-    <td class="tg-c3ow" rowspan="2"><br>DIBCO 2018</td>
+    <td class="tg-c3ow" rowspan="2"><br>H-DIBCO 2018</td>
     <td class="tg-c3ow">DocEnTr-Base</td>
     <td class="tg-c3ow">8x8</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1qnIDVA7C5BGInEIBT65OogT0N9ca_E97/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>

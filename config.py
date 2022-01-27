@@ -12,6 +12,7 @@ class Configs():
         self.parser.add_argument('--validation_dataset', type=str, default='2016')
         self.parser.add_argument('--batch_size', type=int, default=8)
         self.parser.add_argument('--epochs', type=int, default=151, help= 'the desired training epochs')
+        self.parser.add_argument('--model_weights_path', type=str, help= 'the desired trained model')
         
         
     def parse(self):
