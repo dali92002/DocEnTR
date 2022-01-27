@@ -154,7 +154,7 @@ def valid_model(epoch):
 model_name = cfg.model_weights_path
 model.load_state_dict(torch.load('./weights/'+model_name))
 
-epoch = "test_images"
+epoch = "_testing"
 
 visualize(str(epoch))
 valid_model(epoch)
