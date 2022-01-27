@@ -91,13 +91,13 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
   <tr>
     <td class="tg-c3ow" rowspan="2">0</td>
     <td class="tg-c3ow" rowspan="2"><br>DIBCO 2011</td>
-    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">DocEnTr-Base</td>
     <td class="tg-c3ow">8x8</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/113X6gzFHTIkHZ3XYbyTcCWpQGV8QQzAs/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-amwm">20.81</td>
   </tr>
   <tr>
-    <td class="tg-c3ow">DocEnTr--L</td>
+    <td class="tg-c3ow">DocEnTr-Large</td>
     <td class="tg-c3ow">16x16</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/12UpSAVFJ90xly5hCqnaAu1_5gmxwFlD_/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-baqh">20.62</td>
@@ -105,13 +105,13 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
   <tr>
     <td class="tg-c3ow" rowspan="2">1</td>
     <td class="tg-c3ow" rowspan="2"><br>DIBCO 2012</td>
-    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">DocEnTr-Base</td>
     <td class="tg-c3ow">8x8</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1FKXAS8BetcB2pCwkOTNHIX4Rj5-tq-Ep/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-amwm">22.29</td>
   </tr>
   <tr>
-    <td class="tg-c3ow">DocEnTr-L</td>
+    <td class="tg-c3ow">DocEnTr-Large</td>
     <td class="tg-c3ow">16x16</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1SwZLVJVJmm_o_kDcYDvLgx74gatUVGUh/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-baqh">22.04</td>
@@ -119,13 +119,13 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
   <tr>
     <td class="tg-c3ow" rowspan="2">2</td>
     <td class="tg-c3ow" rowspan="2"><br>DIBCO 2017</td>
-    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">DocEnTr-Base</td>
     <td class="tg-c3ow">8x8</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1ABR48OpTXV3hcGNGfkSNfvAHCQlztV1o/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-amwm">19.11</td>
   </tr>
   <tr>
-    <td class="tg-c3ow">DocEnTr-L</td>
+    <td class="tg-c3ow">DocEnTr-Large</td>
     <td class="tg-c3ow">16x16</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1AlyPZJ7xviDggOKgeXE2kcVQQuz5BK6-/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-baqh">18.85</td>
@@ -133,13 +133,13 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
   <tr>
     <td class="tg-c3ow" rowspan="2">3</td>
     <td class="tg-c3ow" rowspan="2"><br>DIBCO 2018</td>
-    <td class="tg-c3ow">DocEnTr-B</td>
+    <td class="tg-c3ow">DocEnTr-Base</td>
     <td class="tg-c3ow">8x8</td>
     <td class="tg-c3ow"><a href="https://drive.google.com/file/d/1qnIDVA7C5BGInEIBT65OogT0N9ca_E97/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-baqh">19.46</td>
   </tr>
   <tr>
-    <td class="tg-baqh">DocEnTr-L</td>
+    <td class="tg-baqh">DocEnTr-Large</td>
     <td class="tg-baqh">16x16</td>
     <td class="tg-baqh"><a href="https://drive.google.com/file/d/1yCnFLTE6Yg3qHNCuERiTP5ErOka8jzZl/view?usp=sharing" target="_blank" rel="noopener noreferrer">model</a></td>
     <td class="tg-amwm">19.47</td>
