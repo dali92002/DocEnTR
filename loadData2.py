@@ -102,11 +102,13 @@ class Read_data(D.Dataset):
 
 def loadData_sets(flipped=False):
     
-    data_tr = os.listdir('data/train')
+    data_tr = os.listdir(cfg.data_path+'train')
+
+    
     np.random.shuffle(data_tr)
-    data_va = os.listdir('data/valid')
+    data_va = os.listdir(cfg.data_path+'valid')
     np.random.shuffle(data_va)
-    data_te = os.listdir('data/test')
+    data_te = os.listdir(cfg.data_path+'test')
     np.random.shuffle(data_te)
     
     data_train = Read_data(data_tr,'train', augmentation=True)
