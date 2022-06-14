@@ -65,7 +65,7 @@ To test the trained model on a specific DIBCO dataset (should be matched with th
 python test.py --data_path /YOUR_DATA_PATH/ --model_weights_path  /THE_MODEL_WEIGHTS_PATH/  --batch_size 16 --vit_model_size base --vit_patch_size 8 --split_size 256 --testing_dataset 2018
 ```
 ### Demo
-To be added ... (Using our Pretrained Models To Binarize A Single Degraded Image)
+In this demo, we show how we can use our pretrained models to binarize a single degraded image, this is detailed with comments in the file named demo.ipynb for simplicity we make it a jupyter notebook where you can modify all the code parts and visualize your progresssive results.
 
 ## Model Zoo
 In this section we release the pre-trained weights for all the best DocEnTr model variants trained on DIBCO benchmarks. 
@@ -155,10 +155,10 @@ In this section we release the pre-trained weights for all the best DocEnTr mode
 If you find this useful for your research, please cite it as follows:
 
 ```bash
-@article{souibgui2022docentr,
+@inproceedings{souibgui2022docentr,
   title={DocEnTr: An end-to-end document image enhancement transformer},
   author={ Souibgui, Mohamed Ali and Biswas, Sanket and  Jemni, Sana Khamekhem and Kessentini, Yousri and Forn{\'e}s, Alicia and Llad{\'o}s, Josep and Pal, Umapada},
-  journal={arXiv preprint arXiv:2201.10252},
+  booktitle={2022 26th International Conference on Pattern Recognition (ICPR)},
   year={2022}
 }
 ```
