@@ -67,7 +67,7 @@ To test the trained model on a specific DIBCO dataset (should be matched with th
 python test.py --data_path /YOUR_DATA_PATH/ --model_weights_path  /THE_MODEL_WEIGHTS_PATH/  --batch_size 16 --vit_model_size base --vit_patch_size 8 --split_size 256 --testing_dataset 2018
 ```
 ### Demo
-In this demo, we show how we can use our pretrained models to binarize a single degraded image, this is detailed with comments in the file named [demo.ipynb] (https://github.com/dali92002/DocEnTR/blob/main/demo.ipynb) for simplicity we make it a jupyter notebook where you can modify all the code parts and visualize your progresssive results. 
+In this demo, we show how we can use our pretrained models to binarize a single degraded image, this is detailed with comments in the file named [demo.ipynb](https://github.com/dali92002/DocEnTR/blob/main/demo.ipynb) for simplicity we make it a jupyter notebook where you can modify all the code parts and visualize your progresssive results. 
 
 ## Model Zoo
 In this section we release the pre-trained weights for all the best DocEnTr model variants trained on DIBCO benchmarks. 
