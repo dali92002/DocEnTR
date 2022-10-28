@@ -1,22 +1,22 @@
 import numpy as np
-import os 
-from  PIL import Image
+import os
 import random
 import cv2
-from shutil import copy
 from tqdm import tqdm
 from config  import Configs
 
-cfg = Configs().parse()
-
-main_path = cfg.data_path
-validation_dataset = cfg.validation_dataset
-testing_dataset = cfg.testing_dataset
-
 def prepare_dibco_experiment(val_set,test_set, patches_size, overlap_size, patches_size_valid):
-    
-    folder = main_path+'DIBCOSETS/'
+    """
+    Prepare the data for training
 
+    Args:
+        val_set (str): the vealidation dataset
+        the_set (str): the testing dataset
+        patches_size (int): patch size for training data
+        overlap_size (int): overlapping size between different patches (vertically and horizontally)
+        patches_size_valid (int): patch size for validation data
+    """
+    folder = main_path+'DIBCOSETS/'
     all_datasets = os.listdir(folder)
     n_i = 1
 
@@ -135,40 +135,44 @@ def prepare_dibco_experiment(val_set,test_set, patches_size, overlap_size, patch
                         cv2.imwrite(main_path+'valid_gt/'+im.split('.')[0]+'_'+str(i)+'_'+str(j)+'.png',gt_p)
 
 
-if not os.path.exists(main_path+'train/'):
-    os.makedirs(main_path+'train/')
-if not os.path.exists(main_path+'train_gt/'):
-    os.makedirs(main_path+'train_gt/')
+if __name__ == "__main__":
+    # get configs 
+    cfg = Configs().parse()
+    main_path = cfg.data_path
+    validation_dataset = cfg.validation_dataset
+    testing_dataset = cfg.testing_dataset
+    patch_size =  cfg.split_size
+    # augment the training data patch size to allow cropping augmentation later in data loader
+    p_size_train = (patch_size+128)
+    p_size_valid  = patch_size
+    overlap_size = patch_size//2
 
-if not os.path.exists(main_path+'valid/'):
-    os.makedirs(main_path+'valid/')
-if not os.path.exists(main_path+'valid_gt/'):
-    os.makedirs(main_path+'valid_gt/')
+    # create train/val/test folders if theu are not existent
+    if not os.path.exists(main_path+'train/'):
+        os.makedirs(main_path+'train/')
+    if not os.path.exists(main_path+'train_gt/'):
+        os.makedirs(main_path+'train_gt/')
 
-if not os.path.exists(main_path+'test/'):
-    os.makedirs(main_path+'test/')
-if not os.path.exists(main_path+'test_gt/'):
-    os.makedirs(main_path+'test_gt/')
-    
+    if not os.path.exists(main_path+'valid/'):
+        os.makedirs(main_path+'valid/')
+    if not os.path.exists(main_path+'valid_gt/'):
+        os.makedirs(main_path+'valid_gt/')
 
+    if not os.path.exists(main_path+'test/'):
+        os.makedirs(main_path+'test/')
+    if not os.path.exists(main_path+'test_gt/'):
+        os.makedirs(main_path+'test_gt/')
 
-os.system('rm '+main_path+'train/*')
-os.system('rm '+main_path+'train_gt/*')
-                
-os.system('rm '+main_path+'valid/*')
-os.system('rm '+main_path+'valid_gt/*')
+    # remove old data if the folders exist
+    os.system('rm '+main_path+'train/*')
+    os.system('rm '+main_path+'train_gt/*')
+                    
+    os.system('rm '+main_path+'valid/*')
+    os.system('rm '+main_path+'valid_gt/*')
 
-os.system('rm '+main_path+'test/*')
-os.system('rm '+main_path+'test_gt/*')
+    os.system('rm '+main_path+'test/*')
+    os.system('rm '+main_path+'test_gt/*')
 
-patch_size =  cfg.split_size
+    # create your data...
+    prepare_dibco_experiment(validation_dataset, testing_dataset, p_size_train, overlap_size, p_size_valid)
 
-p_size = (patch_size+128)
-p_size_valid  = patch_size
-overlap_size = patch_size//2
-
-prepare_dibco_experiment(validation_dataset, testing_dataset,p_size,overlap_size,p_size_valid)
-
-
-
-exit(0)

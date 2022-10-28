@@ -6,7 +6,7 @@ from vit_pytorch import ViT
 from einops import rearrange
 from cog import BasePredictor, Input, Path
 
-from models.binae import BINMODEL
+from models.binae import BinModel
 
 
 THRESHOLD = 0.5  ## binarization threshold after the model output
@@ -52,9 +52,8 @@ class Predictor(BasePredictor):
         }
 
         self.models = {
-            k: BINMODEL(
+            k: BinModel(
                 encoder=v[k],
-                masking_ratio=0.5,  # __ doesnt matter for binarization
                 decoder_dim=self.settings[k]["ENCODERDIM"],
                 decoder_depth=self.settings[k]["ENCODERLAYERS"],
                 decoder_heads=self.settings[k]["ENCODERHEADS"],
@@ -155,6 +154,17 @@ class Predictor(BasePredictor):
 
 
 def split(im, h, w):
+    """
+    split image into patches
+
+    Args:
+        im (np.array): image to be splitted
+        h (int): image height
+        w (int): image width
+    Returns:
+        patches [np.array, ..., np.array]: list of patches with size SPLITSIZExSPLITSIZE
+                                         obtained from image
+    """
     patches = []
     nsize1 = SPLITSIZE
     nsize2 = SPLITSIZE
@@ -166,6 +176,16 @@ def split(im, h, w):
 
 
 def merge_image(splitted_images, h, w):
+    """
+    merge patches into image and return it
+
+    Args:
+        splitted_images [np.array, ..., np.array]: list of patches to costruct the image
+        h (int): final image height
+        w (int): final image width
+    Returns:
+        image (np.array): the constructed image
+    """
     image = np.zeros(((h, w, 3)))
     nsize1 = SPLITSIZE
     nsize2 = SPLITSIZE

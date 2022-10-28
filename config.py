@@ -1,6 +1,5 @@
 import argparse
 
-
 class Configs():
     def __init__(self):
         self.parser = argparse.ArgumentParser()
@@ -13,7 +12,6 @@ class Configs():
         self.parser.add_argument('--batch_size', type=int, default=8)
         self.parser.add_argument('--epochs', type=int, default=151, help= 'the desired training epochs')
         self.parser.add_argument('--model_weights_path', type=str, help= 'the desired trained model')
-        
         
     def parse(self):
         return self.parser.parse_args()

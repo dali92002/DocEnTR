@@ -1,214 +1,176 @@
-from typing import Any
 import torch
 from vit_pytorch import ViT
-from models.binae import BINMODEL
-import torchvision.transforms as transforms
-import numpy as np
+from models.binae import BinModel
 import torch.optim as optim
 from einops import rearrange
-import loadData2 as loadData
+import load_data
 import utils as utils
 from  config import Configs
 import os
 
-
-cfg = Configs().parse()
-
-
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-
-
+# get utils functions
 count_psnr = utils.count_psnr
 imvisualize = utils.imvisualize
-load_data_func = loadData.loadData_sets
+load_data_func = load_data.load_datasets
 
+def build_model(setting, image_size, patch_size):
+    """
+    Build model depending on its size
 
-transform = transforms.Compose([transforms.RandomResizedCrop(256),transforms.ToTensor(),transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    Args:
+        setting (str): model size (small/base/large)
+        image_size (int, int): ihabe height and width
+        patch_size (int): patch size for the vit
+    Returns:
+        model (BinModel): the built model to be trained
+    """
+    if setting == 'base':
+        encoder_layers = 6
+        encoder_heads = 8
+        encoder_dim = 768
 
+    elif setting == 'small':
+        encoder_layers = 3
+        encoder_heads = 4
+        encoder_dim = 512
 
+    elif setting == 'large':
+        encoder_layers = 12
+        encoder_heads = 16
+        encoder_dim = 1024
 
+    v = ViT(
+        image_size = image_size,
+        patch_size = patch_size,
+        num_classes = 1000,
+        dim = encoder_dim,
+        depth = encoder_layers,
+        heads = encoder_heads,
+        mlp_dim = 2048
+    )
 
-SPLITSIZE = cfg.split_size
-SETTING = cfg.vit_model_size
-TPS = cfg.vit_patch_size
+    model = BinModel(
+        encoder = v,
+        decoder_dim = encoder_dim,      
+        decoder_depth = encoder_layers,
+        decoder_heads = encoder_heads  
+    )
+    return model
 
-batch_size = cfg.batch_size
+def visualize(model, epoch, validloader, image_size, patch_size):
+    """
+    Visualize the result on the validation set and show the validation loss
 
-experiment = SETTING +'_'+ str(SPLITSIZE)+'_' + str(TPS)
-
-patch_size = TPS
-image_size =  (SPLITSIZE,SPLITSIZE)
-
-MASKINGRATIO = 0.5
-VIS_RESULTS = True
-VALID_DIBCO = cfg.validation_dataset
-
-
-if SETTING == 'base':
-    ENCODERLAYERS = 6
-    ENCODERHEADS = 8
-    ENCODERDIM = 768
-
-if SETTING == 'small':
-    ENCODERLAYERS = 3
-    ENCODERHEADS = 4
-    ENCODERDIM = 512
-
-if SETTING == 'large':
-    ENCODERLAYERS = 12
-    ENCODERHEADS = 16
-    ENCODERDIM = 1024
-
-
-
-best_psnr = 0
-best_epoch = 0
-
-
-def sort_batch(batch):
-    n_batch = len(batch)
-    train_index = []
-    train_in = []
-    train_out = []
-    for i in range(n_batch):
-        idx, img, gt_img = batch[i]
-
-        train_index.append(idx)
-        train_in.append(img)
-        train_out.append(gt_img)
-
-    train_index = np.array(train_index)
-    train_in = np.array(train_in, dtype='float32')
-    train_out = np.array(train_out, dtype='float32')
-
-    train_in = torch.from_numpy(train_in)
-    train_out = torch.from_numpy(train_out)
-
-    return train_index, train_in, train_out
-
-
-def all_data_loader():
-    data_train, data_valid, data_test = load_data_func()
-    train_loader = torch.utils.data.DataLoader(data_train, collate_fn=sort_batch, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=True)
-    valid_loader = torch.utils.data.DataLoader(data_valid, collate_fn=sort_batch, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=True)
-    test_loader = torch.utils.data.DataLoader(data_test, collate_fn=sort_batch, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=True)
-
-    return train_loader, valid_loader, test_loader
-
-trainloader, validloader, testloader = all_data_loader()
-
-
-
-
-v = ViT(
-    image_size = image_size,
-    patch_size = patch_size,
-    num_classes = 1000,
-    dim = ENCODERDIM,
-    depth = ENCODERLAYERS,
-    heads = ENCODERHEADS,
-    mlp_dim = 2048
-)
-
-model = BINMODEL(
-    encoder = v,
-    masking_ratio = MASKINGRATIO,   ## __ doesnt matter for binarization
-    decoder_dim = ENCODERDIM,      
-    decoder_depth = ENCODERLAYERS,
-    decoder_heads = ENCODERHEADS       # anywhere from 1 to 8
-)
-
-
-
-model = model.to(device)
-
-
-optimizer = optim.AdamW(model.parameters(),lr=1.5e-4, betas=(0.9, 0.95), eps=1e-08, weight_decay=0.05, amsgrad=False)
-
-
-def visualize(epoch):
+    Args:
+        model (BinModel): the model
+        epoch (str): the current epoch
+        validloader (Dataloder): the vald data loader
+        image_size (int, int): image size
+        patch_size (int): ViT used patch size
+    """
     losses = 0
-    for i, (valid_index, valid_in, valid_out) in enumerate(validloader):
-        # inputs, labels = data
+    for _, (valid_index, valid_in, valid_out) in enumerate(validloader):
         bs = len(valid_in)
-
         inputs = valid_in.to(device)
         outputs = valid_out.to(device)
-
         with torch.no_grad():
-            loss,_, pred_pixel_values = model(inputs,outputs)
-            
+            loss,_, pred_pixel_values = model(inputs,outputs)            
             rec_patches = pred_pixel_values
-
-            rec_images = rearrange(rec_patches, 'b (h w) (p1 p2 c) -> b c (h p1) (w p2)', p1 = patch_size, p2 = patch_size,  h=image_size[0]//patch_size)
-            
+            rec_images = rearrange(rec_patches, 'b (h w) (p1 p2 c) -> b c (h p1) (w p2)',
+                                 p1 = patch_size, p2 = patch_size,  h=image_size[0]//patch_size)
             for j in range (0,bs):
-                imvisualize(inputs[j].cpu(),outputs[j].cpu(),rec_images[j].cpu(),valid_index[j],epoch,experiment)
-            
+                imvisualize(inputs[j].cpu(), outputs[j].cpu(),
+                            rec_images[j].cpu(), valid_index[j],
+                            epoch, experiment)
             losses += loss.item()
-    
     print('valid loss: ', losses / len(validloader))
 
+def valid_model(model, data_path, epoch, experiment, valid_dibco):
+    """
+    Count PSNR of current epoch and priny it compared to the last best
+    one
 
+    Args:
+        model (BinModel): the model
+        data_path (str): path of the data folder
+        epoch (int): the current epoch
+        experiment (str): the name of the experiment
+        valid_dibco (str): the validation data set
 
-def valid_model(epoch):
+    """
     global best_psnr
     global best_epoch
-
     print('last best psnr: ', best_psnr, 'epoch: ', best_epoch)
-    
-    psnr  = count_psnr(epoch,valid_data=VALID_DIBCO,setting=experiment)
+    psnr  = count_psnr(epoch, data_path, valid_data=valid_dibco, setting=experiment)
     print('curr psnr: ', psnr)
 
-
+    # change the best psnr to best epoch and save model if it is the case
     if psnr >= best_psnr:
         best_psnr = psnr
         best_epoch = epoch
-        
         if not os.path.exists('./weights/'):
             os.makedirs('./weights/')
-    
-        torch.save(model.state_dict(), './weights/best-model_'+str(TPS)+'_'+VALID_DIBCO+experiment+'.pt')
-
+        torch.save(model.state_dict(), './weights/best-model_' +
+                 str(TPS)+'_' + valid_dibco + experiment + '.pt')
+        # keep only the best epoch images (for storage constraints)    
         dellist = os.listdir('vis'+experiment)
         dellist.remove('epoch'+str(epoch))
-
         for dl in dellist:
             os.system('rm -r vis'+experiment+'/'+dl)
     else:
         os.system('rm -r vis'+experiment+'/epoch'+str(epoch))
+
+best_psnr = 0
+best_epoch = 0
+
+if __name__ == "__main__":
+    # get configs
+    cfg = Configs().parse()
+    SPLITSIZE = cfg.split_size
+    setting = cfg.vit_model_size
+    TPS = cfg.vit_patch_size
+    batch_size = cfg.batch_size
+    valid_dibco = cfg.validation_dataset
+    data_path = cfg.data_path
+    patch_size = TPS
+    image_size =  (SPLITSIZE,SPLITSIZE)
+    vis_results = True
     
-
-
-for epoch in range(1,cfg.epochs): 
-
-    running_loss = 0.0
+    # set experiment name
+    experiment = setting +'_'+ str(SPLITSIZE)+'_' + str(TPS)
     
-    for i, (train_index, train_in, train_out) in enumerate(trainloader):
-        
-        inputs = train_in.to(device)
-        outputs = train_out.to(device)
-
-        optimizer.zero_grad()
-
-        loss, _,_= model(inputs,outputs)
-
-        loss.backward()
-        optimizer.step()
-        
-        running_loss += loss.item()
-        
-        show_every = int(len(trainloader) / 7)
-
-        if i % show_every == show_every-1:    # print every 20 mini-batches
-            print('[Epoch: %d, Iter: %5d] Train loss: %.3f' % (epoch, i + 1, running_loss / show_every))
-            running_loss = 0.0
-       
+    # get dataloaders
+    trainloader, validloader, _ = load_data.all_data_loader(batch_size)
     
-    if VIS_RESULTS:
-        visualize(str(epoch))
-        valid_model(epoch)
+    # get model
+    model = build_model(setting, image_size, patch_size)
+    
+    model = model.to(device)
+    optimizer = optim.AdamW(model.parameters(),lr=1.5e-4, betas=(0.9, 0.95),
+                         eps=1e-08, weight_decay=0.05, amsgrad=False)
 
-
+    # train the model for the specified epochs
+    for epoch in range(1,cfg.epochs): 
+        running_loss = 0.0
+        for i, (train_index, train_in, train_out) in enumerate(trainloader):
+            # get input/target pairs
+            inputs = train_in.to(device)
+            outputs = train_out.to(device)
+            optimizer.zero_grad()
+            # forward pass
+            loss, _,_= model(inputs,outputs)
+            # backward pass
+            loss.backward()
+            optimizer.step()
+            running_loss += loss.item()
+            # display loss
+            show_every = int(len(trainloader) / 7)
+            if i % show_every == show_every-1:    # print every n mini-batches. here n = len(data)/7
+                print('[Epoch: %d, Iter: %5d] Train loss: %.3f' % (epoch, i + 1, running_loss / show_every))
+                running_loss = 0.0
+        # visialize result and valid loss
+        if vis_results:
+            visualize(model, str(epoch), validloader, image_size, patch_size)
+            valid_model(model, data_path, epoch, experiment, valid_dibco)
