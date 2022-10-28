@@ -26,21 +26,16 @@ def build_model(setting, image_size, patch_size):
     Returns:
         model (BinModel): the built model to be trained
     """
-    if setting == 'base':
-        encoder_layers = 6
-        encoder_heads = 8
-        encoder_dim = 768
+    # define hyperparameters for the models depending on size
+    hyper_params = {"base": [6, 8, 768],
+                    "small": [3, 4, 512],
+                    "large": [12, 16, 1024]} 
 
-    elif setting == 'small':
-        encoder_layers = 3
-        encoder_heads = 4
-        encoder_dim = 512
+    encoder_layers = hyper_params[setting][0]
+    encoder_heads = hyper_params[setting][1]
+    encoder_dim = hyper_params[setting][2]
 
-    elif setting == 'large':
-        encoder_layers = 12
-        encoder_heads = 16
-        encoder_dim = 1024
-
+    # define encoder
     v = ViT(
         image_size = image_size,
         patch_size = patch_size,
@@ -51,6 +46,7 @@ def build_model(setting, image_size, patch_size):
         mlp_dim = 2048
     )
 
+    # define full model
     model = BinModel(
         encoder = v,
         decoder_dim = encoder_dim,      
