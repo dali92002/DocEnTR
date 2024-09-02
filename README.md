@@ -48,6 +48,9 @@ cd DocEnTr
 ## Process Data
 ### Data Path
 We gathered the DIBCO, H-DIBCO and PALM datasets and organized them in one folder. You can download it from this [link](https://drive.google.com/file/d/16pIO4c-mA2kHc1I3uqMs7VwD4Jb4F1Vc/view?usp=sharing). After downloading, extract the folder named DIBCOSETS and place it in your desired data path. Means:  /YOUR_DATA_PATH/DIBCOSETS/
+
+### ⚠️ Data Licence
+Be aware that these datasets have their own Licences, they are not included under the Licence of this repository.
  
 ### Data Splitting
 Specify the data path, split size, validation and testing sets to prepare your data. In this example, we set the split size as (256 X 256), the validation set as 2016 and the testing as 2018 while running the process_dibco.py file.
