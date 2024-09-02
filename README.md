@@ -49,7 +49,7 @@ cd DocEnTr
 ### Data Path
 We gathered the DIBCO, H-DIBCO and PALM datasets and organized them in one folder. You can download it from this [link](https://drive.google.com/file/d/16pIO4c-mA2kHc1I3uqMs7VwD4Jb4F1Vc/view?usp=sharing). After downloading, extract the folder named DIBCOSETS and place it in your desired data path. Means:  /YOUR_DATA_PATH/DIBCOSETS/
 
-### ⚠️ Data Licence
+### ⚠️ Data License
 Be aware that these datasets have their own Licences, they are not included under the Licence of this repository.
  
 ### Data Splitting
