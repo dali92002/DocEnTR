@@ -166,6 +166,11 @@ venv.bak/
 .spyderproject
 .spyproject
 
+
+
+# PyCharm project settings
+.idea
+
  
 
 # Rope project settings
@@ -197,3 +202,8 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+
+# Sublime project settings
+*.sublime-project
+*.sublime-workspace
